@@ -1,3 +1,6 @@
 {
-  "*.ts": "eslint --cache --fix"
+  "*.ts": [
+    "eslint --cache --fix",
+    "yarn test:staged"
+  ]
 }
