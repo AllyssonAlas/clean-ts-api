@@ -11,6 +11,7 @@
   },
   "plugins": ["@typescript-eslint", "prettier", "jest"],
   "rules": {
+    "@typescript-eslint/promise-function-async": 2,
     "camelcase": 0,
     "comma-dangle": ["error", "always-multiline"],
     "jest/no-disabled-tests": "warn",
