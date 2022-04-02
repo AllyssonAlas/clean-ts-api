@@ -9,7 +9,7 @@ import {
 import { SignUpController } from './signup';
 
 import { MissingParamError, ServerError } from '../../errors';
-import { badRequest, ok, serverError } from '../../helpers/http-helper';
+import { badRequest, ok, serverError } from '../../helpers/http/http-helper';
 
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
