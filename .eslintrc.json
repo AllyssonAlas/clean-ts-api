@@ -20,6 +20,7 @@
     "jest/prefer-to-have-length": "warn",
     "jest/valid-expect": "error",
     "no-multiple-empty-lines": 0,
+    "no-useless-constructor": 0,
     "prettier/prettier": ["error", {}, { "usePrettierrc": true }],
     "semi": 0,
     "space-before-function-paren": [
