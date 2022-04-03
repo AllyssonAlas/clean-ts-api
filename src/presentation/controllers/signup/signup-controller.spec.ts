@@ -6,7 +6,7 @@ import {
   Validation,
 } from './signup-protocols';
 
-import { SignUpController } from './signup';
+import { SignUpController } from './signup-controller';
 
 import { MissingParamError, ServerError } from '../../errors';
 import { badRequest, ok, serverError } from '../../helpers/http/http-helper';
