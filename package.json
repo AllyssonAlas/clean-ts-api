@@ -16,6 +16,7 @@
     "@types/validator": "^13.7.2",
     "@typescript-eslint/eslint-plugin": "^5.16.0",
     "@typescript-eslint/parser": "^5.16.0",
+    "coveralls": "^3.1.1",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "6.15.0",
     "eslint-config-standard": "^16.0.3",
@@ -46,7 +47,8 @@
     "test:unit": "yarn test --watch -c jest-unit-config.js",
     "test:integration": "yarn test --watch -c jest-integration-config.js",
     "test:staged": "yarn test --findRelatedTests",
-    "test:ci": "yarn test --coverage"
+    "test:ci": "yarn test --coverage",
+    "test:coveralls": "yarn test:ci && coveralls < coverage/lcov.info"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
