@@ -1,7 +1,8 @@
-import { LogErrorRepository } from '../../data/protocols/db/log/log-error-repository';
-import { AccountModel } from '../../domain/models/account';
-import { ok, serverError } from '../../presentation/helpers/http/http-helper';
-import { Controller, HttpRequest, HttpResponse } from '../../presentation/protocols';
+import { AccountModel } from '@/domain/models/account';
+import { LogErrorRepository } from '@/data/protocols/db/log/log-error-repository';
+import { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols';
+import { ok, serverError } from '@/presentation/helpers/http/http-helper';
+
 import { LogControllerDecorator } from './log-controller-decorator';
 
 const makeLogErrorRepository = (): LogErrorRepository => {
