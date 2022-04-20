@@ -2,9 +2,8 @@ import { SurveyModel } from '@/domain/models/survey';
 import { AddSurveyModel } from '@/domain/usecases/add-survey';
 import { AddSurveyRepository } from '@/data/protocols/db/survey/add-survey-repository';
 import { LoadSurveysRepository } from '@/data/protocols/db/survey/load-surveys-repository';
-
-import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper';
 import { LoadSurveyByIdRepository } from '@/data/usecases/load-survey-by-id/db-load-survey-by-id-protocols';
+import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper';
 
 // eslint-disable-next-line prettier/prettier
 export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRepository, LoadSurveyByIdRepository {
@@ -16,12 +15,12 @@ export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRe
   async loadAll(): Promise<SurveyModel[]> {
     const surveyCollection = await MongoHelper.getCollection('surveys');
     const surveys = await surveyCollection.find().toArray();
-    return surveys;
+    return MongoHelper.mapCollection(surveys);
   }
 
   async loadById(id: string): Promise<SurveyModel> {
     const surveyCollection = await MongoHelper.getCollection('surveys');
     const survey = await surveyCollection.findOne({ _id: id });
-    return survey;
+    return survey && MongoHelper.map(survey);
   }
 }
