@@ -1,5 +1,5 @@
 import { AccountModel } from '@/domain/models/account';
-import { AddAccountModel } from '@/domain/usecases/account/add-account';
+import { AddAccountParams } from '@/domain/usecases/account/add-account';
 import { AddAccountRepository } from '@/data/protocols/db/account/add-account-repository';
 import { LoadAccountByEmailRepository } from '@/data/protocols/db/account/load-account-by-email-repository';
 import { LoadAccountByTokenRepository } from '@/data/protocols/db/account/load-account-by-token-repository';
@@ -9,7 +9,7 @@ import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper';
 
 // eslint-disable-next-line prettier/prettier
 export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository, LoadAccountByTokenRepository {
-  async add(accountData: AddAccountModel): Promise<AccountModel> {
+  async add(accountData: AddAccountParams): Promise<AccountModel> {
     const accountCollection = await MongoHelper.getCollection('accounts');
     const result = await accountCollection.insertOne(accountData);
     return MongoHelper.map(result.ops[0]);

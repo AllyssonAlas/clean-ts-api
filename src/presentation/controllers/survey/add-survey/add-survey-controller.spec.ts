@@ -5,7 +5,7 @@ import { badRequest, noContent, serverError } from '@/presentation/helpers/http/
 import { AddSurveyController } from './add-survey-controller';
 import {
   AddSurvey,
-  AddSurveyModel,
+  AddSurveyParams,
   HttpRequest,
   Validation,
 } from './add-survey-controller-protocols';
@@ -25,7 +25,7 @@ const makeFakeRequest = (): HttpRequest => ({
 
 const makeAddSurvey = (): AddSurvey => {
   class AddSurveyStub implements AddSurvey {
-    async add(data: AddSurveyModel): Promise<void> {
+    async add(data: AddSurveyParams): Promise<void> {
       return new Promise((resolve) => resolve());
     }
   }
