@@ -1,3 +1,4 @@
+import { LoadSurveyResultRepository } from '@/data/protocols/db/survey-result/load-survey-result-repository';
 import {
   SaveSurveyResultParams,
   SaveSurveyResultRepository,
@@ -7,7 +8,8 @@ import { ObjectId } from 'mongodb';
 
 import { MongoHelper, QueryBuilder } from '../helpers';
 
-export class SurveyResultMongoRepository implements SaveSurveyResultRepository {
+// eslint-disable-next-line prettier/prettier
+export class SurveyResultMongoRepository implements SaveSurveyResultRepository, LoadSurveyResultRepository {
   async save(data: SaveSurveyResultParams): Promise<SurveyResultModel> {
     const surveyResultCollection = await MongoHelper.getCollection('surveyResults');
     await surveyResultCollection.findOneAndUpdate(
@@ -29,7 +31,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository {
     return surveyResult;
   }
 
-  private async loadBySurveyId(surveyId: string): Promise<SurveyResultModel> {
+  async loadBySurveyId(surveyId: string): Promise<SurveyResultModel> {
     const surveyResultCollection = await MongoHelper.getCollection('surveyResults');
     const query = new QueryBuilder()
       .match({ surveyId: new ObjectId(surveyId) })
