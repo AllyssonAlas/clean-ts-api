@@ -1,20 +1,25 @@
 import { mockSurveyResultModel, throwError } from '@/domain/test';
-import { mockLoadSurveyResultRepository } from '@/data/test';
+import { mockLoadSurveyByIdRepository, mockLoadSurveyResultRepository } from '@/data/test';
 
-import { LoadSurveyResultRepository } from './db-load-survey-result-protocols';
+import {
+  LoadSurveyResultRepository,
+  LoadSurveyByIdRepository,
+} from './db-load-survey-result-protocols';
 
 import { DbLoadSurveyResult } from './db-load-survey-result';
 
 type SutTypes = {
   sut: DbLoadSurveyResult;
   loadSurveyResultRepositoryStub: LoadSurveyResultRepository;
+  loadSurveyByIdRepositoryStub: LoadSurveyByIdRepository;
 };
 
 const makeSut = (): SutTypes => {
   const loadSurveyResultRepositoryStub = mockLoadSurveyResultRepository();
-  const sut = new DbLoadSurveyResult(loadSurveyResultRepositoryStub);
+  const loadSurveyByIdRepositoryStub = mockLoadSurveyByIdRepository();
+  const sut = new DbLoadSurveyResult(loadSurveyResultRepositoryStub, loadSurveyByIdRepositoryStub);
 
-  return { sut, loadSurveyResultRepositoryStub };
+  return { sut, loadSurveyResultRepositoryStub, loadSurveyByIdRepositoryStub };
 };
 
 describe('DbLoadSurveyResult Usecase', () => {
@@ -32,9 +37,19 @@ describe('DbLoadSurveyResult Usecase', () => {
     await expect(promise).rejects.toThrow();
   });
 
+  test('Should call LoadSurveyByIdRepository if LoadSurveyResultRepository returns null', async () => {
+    const { sut, loadSurveyResultRepositoryStub, loadSurveyByIdRepositoryStub } = makeSut();
+    const loadByIdSpy = jest.spyOn(loadSurveyByIdRepositoryStub, 'loadById');
+    jest
+      .spyOn(loadSurveyResultRepositoryStub, 'loadBySurveyId')
+      .mockReturnValueOnce(Promise.resolve(null));
+    await sut.load('any_survey_id');
+    await expect(loadByIdSpy).toHaveBeenCalledWith('any_survey_id');
+  });
+
   test('Should return surveyResultModel on success', async () => {
     const { sut } = makeSut();
     const sruveyResult = await sut.load('any_survey_id');
-    await expect(sruveyResult).toEqual(mockSurveyResultModel());
+    expect(sruveyResult).toEqual(mockSurveyResultModel());
   });
 });
