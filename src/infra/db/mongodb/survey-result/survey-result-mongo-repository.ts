@@ -1,10 +1,11 @@
+import { ObjectId } from 'mongodb';
+
 import { LoadSurveyResultRepository } from '@/data/protocols/db/survey-result/load-survey-result-repository';
 import {
   SaveSurveyResultParams,
   SaveSurveyResultRepository,
   SurveyResultModel,
 } from '@/data/usecases/survey-result/save-survey-result/db-save-survey-result-protocols';
-import { ObjectId } from 'mongodb';
 
 import { MongoHelper, QueryBuilder } from '../helpers';
 
@@ -153,6 +154,6 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
       })
       .build();
     const surveyResult = await surveyResultCollection.aggregate(query).toArray();
-    return surveyResult?.length ? surveyResult[0] : null;
+    return surveyResult.length ? surveyResult[0] : null;
   }
 }
