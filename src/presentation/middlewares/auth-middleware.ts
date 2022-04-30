@@ -5,7 +5,7 @@ import {
   HttpResponse,
   Middleware,
   LoadAccountByToken,
-} from './auth-middlewares-protocols';
+} from './auth-middleware-protocols';
 
 export class AuthMiddleware implements Middleware {
   constructor(

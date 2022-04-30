@@ -9,9 +9,9 @@ import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper';
 
 // eslint-disable-next-line prettier/prettier
 export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository, LoadAccountByTokenRepository {
-  async add(accountData: AddAccountParams): Promise<AccountModel> {
+  async add(data: AddAccountParams): Promise<AccountModel> {
     const accountCollection = await MongoHelper.getCollection('accounts');
-    const result = await accountCollection.insertOne(accountData);
+    const result = await accountCollection.insertOne(data);
     return MongoHelper.map(result.ops[0]);
   }
 
