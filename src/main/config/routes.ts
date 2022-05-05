@@ -1,5 +1,5 @@
-import { readdirSync } from 'fs';
 import { Express, Router } from 'express';
+import { readdirSync } from 'fs';
 
 export default (app: Express): void => {
   const router = Router();
