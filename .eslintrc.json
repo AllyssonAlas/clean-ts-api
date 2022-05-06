@@ -13,6 +13,7 @@
   "rules": {
     "@typescript-eslint/promise-function-async": 2,
     "@typescript-eslint/require-await": 2,
+    "@typescript-eslint/no-redeclare": ["error"],
     "camelcase": 0,
     "comma-dangle": ["error", "always-multiline"],
     "jest/no-disabled-tests": "warn",
@@ -21,6 +22,7 @@
     "jest/prefer-to-have-length": "warn",
     "jest/valid-expect": "error",
     "no-multiple-empty-lines": 0,
+    "no-redeclare": "off",
     "no-useless-constructor": 0,
     "prettier/prettier": ["error", {}, { "usePrettierrc": true }],
     "semi": 0,
