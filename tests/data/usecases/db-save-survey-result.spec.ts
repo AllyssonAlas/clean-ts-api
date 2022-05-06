@@ -26,6 +26,7 @@ describe('DbSaveSurveyResult Usecase', () => {
   beforeAll(() => {
     MockDate.set(new Date());
   });
+
   afterAll(() => {
     MockDate.reset();
   });
