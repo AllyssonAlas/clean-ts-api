@@ -1,6 +1,7 @@
 import { SurveyModel } from '@/domain/models';
 import {
   AddSurveyRepository,
+  CheckSurveyByIdRepository,
   LoadSurveyByIdRepository,
   LoadSurveysRepository,
 } from '@/data/protocols/db';
@@ -16,13 +17,23 @@ export class AddSurveyRepositorySpy implements AddSurveyRepository {
   }
 }
 
-export class LoadSurveyByIdRepositorySpy implements LoadSurveyByIdRepository {
-  surveyModel = mockSurveyModel();
+export class CheckSurveyByIdRepositorySpy implements CheckSurveyByIdRepository {
+  result = true;
   id: string;
 
-  async loadById(id: string): Promise<SurveyModel> {
+  async checkById(id: string): Promise<CheckSurveyByIdRepository.Result> {
     this.id = id;
-    return Promise.resolve(this.surveyModel);
+    return Promise.resolve(this.result);
+  }
+}
+
+export class LoadSurveyByIdRepositorySpy implements LoadSurveyByIdRepository {
+  result = mockSurveyModel();
+  id: string;
+
+  async loadById(id: string): Promise<LoadSurveyByIdRepository.Result> {
+    this.id = id;
+    return Promise.resolve(this.result);
   }
 }
 

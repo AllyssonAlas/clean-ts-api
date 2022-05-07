@@ -5,11 +5,12 @@ import {
   AddSurveyRepository,
   LoadSurveysRepository,
   LoadSurveyByIdRepository,
+  CheckSurveyByIdRepository,
 } from '@/data/protocols/db';
 import { MongoHelper, QueryBuilder } from '@/infra/db';
 
 // eslint-disable-next-line prettier/prettier
-export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRepository, LoadSurveyByIdRepository {
+export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRepository, LoadSurveyByIdRepository, CheckSurveyByIdRepository {
   async add(data: AddSurveyRepository.Params): Promise<void> {
     const surveyCollection = await MongoHelper.getCollection('surveys');
     await surveyCollection.insertOne(data);
@@ -52,9 +53,18 @@ export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRe
     return MongoHelper.mapCollection(surveys);
   }
 
-  async loadById(id: string): Promise<SurveyModel> {
+  async loadById(id: string): Promise<LoadSurveyByIdRepository.Result> {
     const surveyCollection = await MongoHelper.getCollection('surveys');
     const survey = await surveyCollection.findOne({ _id: new ObjectId(id) });
     return survey && MongoHelper.map(survey);
+  }
+
+  async checkById(id: string): Promise<CheckSurveyByIdRepository.Result> {
+    const surveyCollection = await MongoHelper.getCollection('surveys');
+    const survey = await surveyCollection.findOne(
+      { _id: new ObjectId(id) },
+      { projection: { _id: 1 } },
+    );
+    return !!survey;
   }
 }
