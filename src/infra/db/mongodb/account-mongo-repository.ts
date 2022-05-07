@@ -3,11 +3,12 @@ import {
   LoadAccountByEmailRepository,
   LoadAccountByTokenRepository,
   UpdateAccessTokenRepository,
+  CheckAccountByEmailRepository,
 } from '@/data/protocols/db';
 import { MongoHelper } from '@/infra/db';
 
 // eslint-disable-next-line prettier/prettier
-export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository, LoadAccountByTokenRepository {
+export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository, LoadAccountByTokenRepository, CheckAccountByEmailRepository {
   async add(data: AddAccountRepository.Params): Promise<AddAccountRepository.Result> {
     const accountCollection = await MongoHelper.getCollection('accounts');
     const result = await accountCollection.insertOne(data);
@@ -38,5 +39,11 @@ export class AccountMongoRepository implements AddAccountRepository, LoadAccount
       { projection: { _id: 1 } },
     );
     return account && MongoHelper.map(account);
+  }
+
+  async checkByEmail(email: string): Promise<CheckAccountByEmailRepository.Result> {
+    const accountCollection = await MongoHelper.getCollection('accounts');
+    const account = await accountCollection.findOne({ email }, { projection: { _id: 1 } });
+    return !!account;
   }
 }
