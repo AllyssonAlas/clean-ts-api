@@ -9,4 +9,5 @@ export const makeApolloServer = (): ApolloServer =>
     resolvers,
     typeDefs,
     schemaDirectives,
+    context: ({ req }) => ({ req }),
   });
