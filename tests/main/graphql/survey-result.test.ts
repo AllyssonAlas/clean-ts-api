@@ -25,7 +25,7 @@ let accountCollection: Collection;
 let surveyCollection: Collection;
 let apolloServer: ApolloServer;
 
-describe('Survey GraphQL', () => {
+describe('SurveyResult GraphQL', () => {
   beforeAll(async () => {
     apolloServer = makeApolloServer();
     await MongoHelper.connect(process.env.MONGO_URL);
@@ -42,26 +42,26 @@ describe('Survey GraphQL', () => {
     await MongoHelper.disconnect();
   });
 
-  describe('Surveys Query', () => {
-    const surveysQuery = gql`
-      query surveys {
-        surveys {
-          id
+  describe('SurveyResult Query', () => {
+    const surveyResultQuery = gql`
+      query surveyResult($surveyId: String!) {
+        surveyResult(surveyId: $surveyId) {
           question
           answers {
-            image
             answer
+            count
+            percent
+            isCurrentAccountAnswer
           }
           date
-          didAnswer
         }
       }
     `;
 
-    test('Should return Surveys', async () => {
+    test('Should return SurveyResult ', async () => {
       const accessToken = await makeAccessToken();
       const now = new Date();
-      await surveyCollection.insertOne({
+      const surveyRes = await surveyCollection.insertOne({
         question: 'any_question',
         answers: [{ answer: 'Answer 1', image: 'http://image-name.com' }, { answer: 'Answer 2' }],
         date: now,
@@ -71,29 +71,17 @@ describe('Survey GraphQL', () => {
         apolloServer,
         extendMockRequest: { headers: { 'x-access-token': accessToken } },
       });
-      const res: any = await query(surveysQuery);
-      expect(res.data.surveys).toHaveLength(1);
-      expect(res.data.surveys[0].id).toBeTruthy();
-      expect(res.data.surveys[0].question).toBe('any_question');
-      expect(res.data.surveys[0].date).toBe(now.toISOString());
-      expect(res.data.surveys[0].didAnswer).toBe(false);
-      expect(res.data.surveys[0].answers).toEqual([
-        { answer: 'Answer 1', image: 'http://image-name.com' },
-        { answer: 'Answer 2', image: null },
-      ]);
-    });
-
-    test('Should return AccessDeniedError if no token is provided', async () => {
-      await surveyCollection.insertOne({
-        question: 'any_question',
-        answers: [{ answer: 'Answer 1', image: 'http://image-name.com' }, { answer: 'Answer 2' }],
-        date: new Date(),
+      const res: any = await query(surveyResultQuery, {
+        variables: {
+          surveyId: surveyRes.ops[0]._id.toString(),
+        },
       });
-
-      const { query } = createTestClient({ apolloServer });
-      const res: any = await query(surveysQuery);
-      expect(res.data).toBeFalsy();
-      expect(res.errors[0].message).toBe('Access denied');
+      expect(res.data.surveyResult.question).toBe('any_question');
+      expect(res.data.surveyResult.date).toBe(now.toISOString());
+      expect(res.data.surveyResult.answers).toEqual([
+        { answer: 'Answer 1', count: 0, percent: 0, isCurrentAccountAnswer: false },
+        { answer: 'Answer 2', count: 0, percent: 0, isCurrentAccountAnswer: false },
+      ]);
     });
   });
 });
